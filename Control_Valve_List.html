@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+   <title>Control Valve List</title>
+   <meta name="description" content="Events" />
+   <style></style>
+   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+      integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous" />
+   <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+      integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+      crossorigin="anonymous"></script>
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+      integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+      crossorigin="anonymous"></script>
+   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+      integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+      crossorigin="anonymous"></script>
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.7.8/angular.min.js"></script>
+   <script src="https://morgul.github.io/ui-bootstrap4/ui-bootstrap-tpls-3.0.6.js"></script>
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.14.1/moment.min.js"></script>
+   <script>
+      angular
+         .module("app", ["ui.bootstrap"])
+         .controller("control_valve_list", function ($scope, $http) {
+            $http.get("control_valve_list.json").then(
+               function successCallback(response) {
+                  $scope.codes = response.data;
+                  console.log("Data_All : ");
+                  console.log(response.data);
+               },
+               function errorCallback(response) {
+                  console.log("Unable to perform get request");
+               }
+            );
+         })
+         .filter("myfilter", function () {
+            return function (x) {
+               var i,
+                  c,
+                  txt = "";
+               for (i = 0; i < x.length; i++) {
+                  c = x[i];
+
+                  c = c.toUpperCase();
+
+                  txt += c;
+               }
+               return txt;
+            };
+         });
+         
+   </script>
+</head>
+<section class="py-5 text-center container">
+   <div class="row py-lg-5">
+     <div class="col-lg-6 col-md-8 mx-auto">
+       <h1 class="fw-light">Maintenance Refinery</h1>
+       <p class="lead text-body-secondary">เราคือ Maintenance Team โรงกลั่น</p>
+       <p>
+         <a href="Instrument_Critical.html" class="btn btn-primary my-2">Instrument Critical Machine</a>
+         <a href="Instrument_List.html" class="btn btn-primary my-2">Instrument List</a>
+         <a href="index.html" class="btn btn-secondary my-2">Back to Main</a>
+       </p>
+     </div>
+   </div>
+ </section>
+<body class="container">
+   <p id="demo" class="mt-2"></p>
+   <script>
+      const d = new Date();
+      document.getElementById("demo").innerHTML = d;
+   </script>
+   <div ng-app="app" ng-controller="control_valve_list">
+      <h3 class="text-center text-white p-2" style="background-color: rgb(221, 62, 236)">
+         Control Valve List
+      </h3>
+      <div class="row">
+         <div class="col-lg-12">
+            <table class="table table-hover">
+               <thead>
+                  <tr class="text-dark" style="background-color: rgb(15, 237, 167)">
+                     <th scope="col"></th>
+                     <th scope="col">Equipment no.</th>
+                     <th scope="col">Equipment Description</th>
+                     <th scope="col">Valve Type</th>
+                     <th scope="col">Valve Manufacture</th>
+                     <th scope="col">Valve Model</th>
+                     <th scope="col">EQ Class</th>
+                     <th scope="col">Activity</th>
+                     <th scope="col">Last Activity Date</th>
+                  </tr>
+               </thead>
+               <tbody>
+                  <tr style="background-color: rgb(83, 35, 214)">
+                     <th scope="col"></th>
+                     <th scope="col">
+                        <input ng-model="s.Equipment_no" placeholder="ค้นตาม Equipment no." class="form-control input-md" />
+                     </th>
+                     <th scope="col">
+                        <input ng-model="s.Equipment_Description" placeholder="ค้นตาม Equipment Description" class="form-control input-md" />
+                     </th>
+                     <th scope="col">
+                        <input ng-model="s.Valve_Type" placeholder="ค้น Valve Type" class="form-control input-md" />
+                     </th>
+                     <th scope="col">
+                        <input ng-model="s.Valve_Manufacture" placeholder="ค้น Valve Manufacture" class="form-control input-md" />
+                     </th>
+                     <th scope="col">
+                        <input ng-model="s.Valve_Model" placeholder="ค้นตาม Valve Model" class="form-control input-md" />
+                     </th>
+                     <th scope="col">
+                        <input ng-model="s.EQ_Class" placeholder="ค้นตาม EQ Class" class="form-control input-md" />
+                     </th>
+                     <th scope="col">
+                        <input ng-model="s.Activity" placeholder="ค้นตาม Activity" class="form-control input-md" />
+                     </th>
+                     <th scope="col">
+                        <input ng-model="s.Last_Activity_Date" placeholder="ค้นตาม Last Activity Date" class="form-control input-md" />
+                     </th>
+                  </tr>
+                  <tr class="small" ng-repeat=" r in  codes.Data_All | filter:s | limitTo: 20">
+                     <td>{{ $index+1}}</td>
+                     <td>{{ r.Equipment_no}}</td>
+                     <td>{{ r.Equipment_Description}}</td>
+                     <td class="text-left">{{ r.Valve_Type}}</td>
+                     <td class="text-left">{{ r.Valve_Manufacture}}</td>
+                     <td class="text-left">{{ r.Valve_Model}}</td>
+                     <td class="text-left">{{ r.EQ_Class}}</td>
+                     <td class="text-left">{{ r.Activity}}</td>
+                     <td class="text-left">{{ r.Last_Activity_Date}}</td>
+                  </tr>
+               </tbody>
+            </table>
+         </div>
+      </div>
+   </div>
+</body>
+
+</html>
